@@ -16,7 +16,11 @@ From terminal run
 ```$xslt
 ./gradlew runTests
 ```
+##### run with parameters:
 
+```$xslt
+./gradlew runTests -Dtags=smoke -Denv=heroku
+```
 ##### UI on firefox:
 
 ```$xslt
