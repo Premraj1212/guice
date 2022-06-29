@@ -1,0 +1,34 @@
+##execution_output
+.gradle/
+build/
+out/
+
+##mac os
+.DS_Store
+
+##reports
+target/
+logs/
+allure-results/
+
+##intellij idea
+.idea
+*.iws
+*.iml
+*.ipr
+
+##eclipse
+.settings
+.project
+.classpath
+
+## vs_code
+.vscode
+
+##netbeans
+/nbproject/private/
+/build/
+/nsbuild/
+/dist/
+/nbdist/
+/.nb-gradle/

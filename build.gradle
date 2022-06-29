@@ -1,0 +1,92 @@
+plugins {
+    id 'java'
+    id "io.qameta.allure" version "2.8.1"
+}
+
+group 'com.vindhiyan'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    //selenium
+    implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '4.0.0-alpha-6'
+    implementation group: 'io.github.bonigarcia', name: 'webdrivermanager', version: '4.0.0'
+
+    //lombok
+    implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.12'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.12'
+
+    testImplementation group: 'org.projectlombok', name: 'lombok', version: '1.18.12'
+    testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.12'
+
+    //google
+    compile group: 'com.google.inject', name: 'guice', version: '4.2.3'
+
+    //square
+    implementation 'com.squareup.okhttp3:okhttp:4.5.0'
+
+    //jeasy
+    implementation group: 'org.jeasy', name: 'easy-random', version: '4.2.0', ext: 'pom'
+
+    //testng
+    implementation group: 'org.testng', name: 'testng', version: '7.1.0'
+
+    //assertj
+    implementation 'org.assertj:assertj-core:3.16.1'
+
+    //allure
+    implementation group: 'io.qameta.allure', name: 'allure-gradle', version: '2.8.1'
+    implementation group: 'io.qameta.allure', name: 'allure-java-commons', version: '2.13.2'
+    implementation group: 'io.qameta.allure', name: 'allure-testng', version: '2.13.2'
+
+    //logger
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.8'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.8'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.13.3'
+
+    //joda-time
+    implementation group: 'joda-time', name: 'joda-time', version: '2.10.6'
+
+}
+
+tasks.withType(Test) {
+    systemProperties = [
+            env                     : System.getProperty('env', 'dev'),
+            tags                    : System.getProperty('tags', 'hackathon'),
+            browser                 : System.getProperty('browser', 'chrome'),
+            target                  : System.getProperty('target', 'ui')
+    ]
+}
+
+task runTests(type: Test) {
+    outputs.upToDateWhen {false}
+    useTestNG {
+        parallel  "methods"
+        includeGroups System.getProperty('tags','hackathon')
+        excludeGroups "units"
+        testLogging.showStandardStreams  true
+        useDefaultListeners  true
+        listeners << 'com.vindhiyan.listeners.SiteListener'
+        listeners << 'com.vindhiyan.listeners.DriverListener'
+        listeners << 'com.vindhiyan.listeners.ReportListener'
+        outputDirectory  file("$buildDir/" + System.getProperty('tags', 'NONE'))
+    }
+}
+
+allure {
+    version = '2.8.1'
+    autoconfigure = true
+    aspectjweaver = true
+    allureJavaVersion = '2.10.0'
+}
+
+// Execution Rules
+tasks.runTests.dependsOn 'clean', 'build'
+tasks.build.mustRunAfter 'clean'
+tasks.runTests.finalizedBy('allureReport')
