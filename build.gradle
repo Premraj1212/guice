@@ -57,8 +57,8 @@ dependencies {
 
 tasks.withType(Test) {
     systemProperties = [
-            env                     : System.getProperty('env', 'dev'),
-            tags                    : System.getProperty('tags', 'hackathon'),
+            env                     : System.getProperty('env', 'heroku'),
+            tags                    : System.getProperty('tags', 'smoke'),
             browser                 : System.getProperty('browser', 'chrome'),
             target                  : System.getProperty('target', 'ui')
     ]
@@ -68,7 +68,7 @@ task runTests(type: Test) {
     outputs.upToDateWhen {false}
     useTestNG {
         parallel  "methods"
-        includeGroups System.getProperty('tags','hackathon')
+        includeGroups System.getProperty('tags','smoke')
         excludeGroups "units"
         testLogging.showStandardStreams  true
         useDefaultListeners  true
