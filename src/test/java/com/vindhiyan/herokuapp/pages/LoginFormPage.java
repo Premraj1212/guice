@@ -1,6 +1,5 @@
 package com.vindhiyan.herokuapp.pages;
 
-import com.vindhiyan.models.Credentials;
 import com.vindhiyan.models.LoginCredentials;
 import com.vindhiyan.pages.BasePage;
 import io.qameta.allure.Step;
